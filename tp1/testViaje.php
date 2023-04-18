@@ -9,8 +9,9 @@ $pasajero2=new Pasajero("Leo","Godinez",41092122,2994632982);
 $pasajero3=new Pasajero("Pipo","Carballo",41092129,2994632983);
 $pasajero4=new Pasajero("Juan","Gomez",41092158,2994632984);
 $pasajero5=new Pasajero("Ivan","Orozco",41092159,2994632985);
+$pasajero6=new Pasajero("AAA","OOO",444,299);
 
-$coleccionPasajero=[$pasajero1,$pasajero2,$pasajero3,$pasajero4,$pasajero5];
+$coleccionPasajero=[$pasajero1,$pasajero2,$pasajero3,$pasajero4,$pasajero5,$pasajero6];
 
 $objResponsableV= new ResponsableV(33599,4231,"Maximiliano","Percara");
 
@@ -76,7 +77,7 @@ do {
                     $nuevoTelefono=trim(fgets(STDIN));
                     $objViaje->ModificarPasajero($numeroDNI,$nuevoNombre,$nuevoApellido,$nuevoTelefono);
                 }else
-                echo "ese pasajero no existe!";
+                echo "\n ESE PASAJERO YA EXISTE!!! \n";
             break;
             case 5:
                 echo "Ingrese la cantidad de pasajeros que desea cargar: ";
@@ -93,8 +94,12 @@ do {
                         $nuevoDNI=trim(fgets(STDIN));
                         echo "Ingrese el Telefono del nuevo Pasajero: ";
                         $nuevoTelefono=trim(fgets(STDIN));
-                        $objViaje->CargarNuevaPasajero($nuevoNombre,$nuevoApellido,$nuevoDNI,$nuevoTelefono);
-                        $count++;
+                        $estaCargado=$objViaje->SeRepite($nuevoNombre,$nuevoApellido,$nuevoDNI,$nuevoTelefono);
+                        if($estaCargado==false){
+                            $objViaje->CargarNuevaPasajero($nuevoNombre,$nuevoApellido,$nuevoDNI,$nuevoTelefono);
+                            $count++;
+                        }else
+                            echo "ese Pasajero ya existe!";
                     }while($count<$numPasajero);
                 }else
                 echo "No hay sufiente espacio!";

@@ -130,6 +130,22 @@ class Viaje{
         }
         return $espacio;
     }
+
+    public function SeRepite($nuevoNombre,$nuevoApellido,$nuevoDNI,$nuevoTelefono){
+        $estaCargado=false;
+        $coleccionPasajeros=$this->getColeccionPasajero();
+        foreach ($coleccionPasajeros as $pasajero) {
+            $nombrePasajero=$pasajero->getNombre();
+            $apellidoPasajero=$pasajero->getApellido();
+            $DNIPasajero=$pasajero->getNumeroDocumento();
+            $telefonoPasajero=$pasajero->getTelefono();
+            if((($nuevoNombre==$nombrePasajero)&&($nuevoApellido==$apellidoPasajero))&&(($nuevoDNI==$DNIPasajero)||($nuevoTelefono==$telefonoPasajero))){
+                $estaCargado=true;
+            }
+        }
+        return $estaCargado;
+    }
+
     public function CargarNuevaPasajero($nuevoNombre,$nuevoApellido,$nuevoDNI,$nuevoTelefono)
     {
         $coleccionPasajero=$this->getColeccionPasajero();
