@@ -43,6 +43,26 @@ do {
                 break;
             case 3:
                 /*numero de empleado, numero de licencia,nombre y apellido */
+                $responsableV=$objViaje->getResponsableV();
+                echo "Ingrese el nuevo Numero de Empleado: ";
+                $nroEmpleado=trim(fgets(STDIN));
+                $responsableV->setNumEmpleado($nroEmpleado);
+                echo "Ingrese el nuevo nuevo Numero de Licencia: ";
+                $nroLicencia=trim(fgets(STDIN));
+                $responsableV->setNumLicencia($nroLicencia);
+                echo "Ingrese el Nombre del Responsable: ";
+                $nombreResponsable=trim(fgets(STDIN));
+                $responsableV->setNombre($nombreResponsable);
+                echo "Ingrese el Apellido del Responsable: ";
+                $apellidoResponsable=trim(fgets(STDIN));
+                $responsableV->setApellido($apellidoResponsable);
+
+                echo "\n Los nuevos datos del Responsable del Viaje son: ".
+                "\nNumero de Empleado: ".$responsableV->getNumEmpleado().
+                "\nNumero de Licencia: ".$responsableV->getNumLicencia().
+                "\nNombre: ".$responsableV->getNombre().
+                "\nApellido: ".$responsableV->getApellido();
+                /*numero de empleado, numero de licencia,nombre y apellido 
                 echo "Ingrese el nuevo Numero de Empleado: ";
                 $nroEmpleado=trim(fgets(STDIN));
                 $objResponsableV->setNumEmpleado($nroEmpleado);
@@ -60,7 +80,7 @@ do {
                 "\nNumero de Empleado: ".$objResponsableV->getNumEmpleado().
                 "\nNumero de Licencia: ".$objResponsableV->getNumLicencia().
                 "\nNombre: ".$objResponsableV->getNombre().
-                "\nApellido: ".$objResponsableV->getApellido();
+                "\nApellido: ".$objResponsableV->getApellido();*/
             break;
             case 4:
                 echo "Ingrese el Numero de DNI del pasajero que desea modificar: ";
