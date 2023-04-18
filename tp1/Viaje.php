@@ -78,36 +78,38 @@ class Viaje{
         return $espacio;
     }
 
-    public function ModificarPasajero($numero){
+    public function BuscarPasajero($numeroDNI){
         $coleccionPasajero=$this->getColeccionPasajero();
-        for($i=0 ; $i<count($coleccionPasajero); $i++){      
-            if($numero==$i){
-                echo "Ingrese el nuevo Nombre: ";
-                $nuevoNombre=trim(fgets(STDIN));
-                echo "Ingrese el nuevo Apellido: ";
-                $nuevoApellido=trim(fgets(STDIN));
-                echo "Ingrese el nuevo DNI: ";
-                $nuevoDNI=trim(fgets(STDIN));
+        $i=0;
+        $encontro=true;
+        while($i<count($coleccionPasajero) && $encontro){ 
+            $i++;     
+            if($numeroDNI==$coleccionPasajero[$i]['DNI']){
+                $encontro=false;
+            }
+        }   
+        return $encontro;
+    }
+
+    public function ModificarPasajero($numeroDNI,$nuevoNombre,$nuevoApellido,$nuevoDNI){
+        $coleccionPasajero=$this->getColeccionPasajero();
+        $i=0;
+        while($i<count($coleccionPasajero)){      
+            if($numeroDNI==$coleccionPasajero[$i]['DNI']){
                 $coleccionPasajero[$i]=['Nombre'=>$nuevoNombre,
                                         'Apellido'=>$nuevoApellido,
                                         'DNI'=>$nuevoDNI];
                 $this->setColeccionPasajero($coleccionPasajero);
             }
+            $i++;
         }              
-     
     }
 
-    public function CargarNuevaPasajero($numPasajero)
+    public function CargarNuevaPasajero($nuevoNombre,$nuevoApellido,$nuevoDNI,$numPasajero)
     {
         $coleccionPasajero=$this->getColeccionPasajero();
         $count=1;
         do {
-            echo "Ingrese el Nombre del nuevo Pasajero ";
-            $nuevoNombre=trim(fgets(STDIN));
-            echo "Ingrese el Apellido del nuevo Pasajero: ";
-            $nuevoApellido=trim(fgets(STDIN));
-            echo "Ingrese el Numero de Documento del nuevo Pasajero: ";
-            $nuevoDNI=trim(fgets(STDIN));
             $count++;
             $pasajero= [
                 'Nombre'=>$nuevoNombre,
