@@ -1,25 +1,21 @@
 <?php
 require_once('Viaje.php');
-/*
-$pasajero1=['Nombre' => "Anna", 'Apellido' => "Cortez", 'DNI' => 41092149];
-$pasajero2=['Nombre' => "Leo", 'Apellido' => "Godinez", 'DNI' => 41092122];
-$pasajero3=['Nombre' => "Pipo", 'Apellido' => "Carballo",'DNI' => 41092129];
-$pasajero4=['Nombre' => "Juan", 'Apellido' => "Gomez", 'DNI' => 41092158];
-$pasajero5=['Nombre' => "Ivan", 'Apellido' => "Orozco", 'DNI' => 41092159];
+require_once('Pasajero.php');
+require_once('ResponsableV.php');
+
+/*Pasajeros :nombre, apellido, numero de documento y telefono */
+$pasajero1=new Pasajero("Anna","Cortez",41092149,2994632981);
+$pasajero2=new Pasajero("Leo","Godinez",41092122,2994632982);
+$pasajero3=new Pasajero("Pipo","Carballo",41092129,2994632983);
+$pasajero4=new Pasajero("Juan","Gomez",41092158,2994632984);
+$pasajero5=new Pasajero("Ivan","Orozco",41092159,2994632985);
 
 $coleccionPasajero=[$pasajero1,$pasajero2,$pasajero3,$pasajero4,$pasajero5];
 
-$objViaje= new Viaje(123,'Bariloche',10,$coleccionPasajero);
+$objResponsableV= new ResponsableV(33599,4231,"Maximiliano","Percara");
 
-*/
+$objViaje= new Viaje(123,'Bariloche',10,$coleccionPasajero,$objResponsableV);
 
-$pasajero[0]=['Nombre' => "Anna", 'Apellido' => "Cortez", 'DNI' => 41092149];
-$pasajero[1]=['Nombre' => "Leo", 'Apellido' => "Godinez", 'DNI' => 41092122];
-$pasajero[2]=['Nombre' => "Pipo", 'Apellido' => "Carballo",'DNI' => 41092129];
-$pasajero[3]=['Nombre' => "Juan", 'Apellido' => "Gomez", 'DNI' => 41092158];
-$pasajero[4]=['Nombre' => "Ivan", 'Apellido' => "Orozco", 'DNI' => 41092159];
-
-$objViaje= new Viaje(123,'Bariloche',10,$pasajero);
 
 //Menu
 do {
@@ -46,6 +42,27 @@ do {
 
                 break;
             case 3:
+                /*numero de empleado, numero de licencia,nombre y apellido */
+                echo "Ingrese el nuevo Numero de Empleado: ";
+                $nroEmpleado=trim(fgets(STDIN));
+                $objResponsableV->setNumEmpleado($nroEmpleado);
+                echo "Ingrese el nuevo nuevo Numero de Licencia: ";
+                $nroLicencia=trim(fgets(STDIN));
+                $objResponsableV->setNumLicencia($nroLicencia);
+                echo "Ingrese el Nombre del Responsable: ";
+                $nombreResponsable=trim(fgets(STDIN));
+                $objResponsableV->setNombre($nombreResponsable);
+                echo "Ingrese el Apellido del Responsable: ";
+                $apellidoResponsable=trim(fgets(STDIN));
+                $objResponsableV->setApellido($apellidoResponsable);
+
+                echo "\n Los nuevos datos del Responsable del Viaje son: ".
+                "\nNumero de Empleado: ".$objResponsableV->getNumEmpleado().
+                "\nNumero de Licencia: ".$objResponsableV->getNumLicencia().
+                "\nNombre: ".$objResponsableV->getNombre().
+                "\nApellido: ".$objResponsableV->getApellido();
+            break;
+            case 4:
                 echo "Ingrese el Numero de DNI del pasajero que desea modificar: ";
                 $numeroDNI=trim(fgets(STDIN));
                 $encontro=$objViaje->BuscarPasajero($numeroDNI);
@@ -54,24 +71,30 @@ do {
                     $nuevoNombre=trim(fgets(STDIN));
                     echo "Ingrese el nuevo Apellido: ";
                     $nuevoApellido=trim(fgets(STDIN));
-                    echo "Ingrese el nuevo DNI: ";
-                    $nuevoDNI=trim(fgets(STDIN));
-                    $objViaje->ModificarPasajero($numeroDNI,$nuevoNombre,$nuevoApellido,$nuevoDNI);
+                    echo "Ingrese el nuevo Telefono: ";
+                    $nuevoTelefono=trim(fgets(STDIN));
+                    $objViaje->ModificarPasajero($numeroDNI,$nuevoNombre,$nuevoApellido,$nuevoTelefono);
                 }else
                 echo "ese pasajero no existe!";
             break;
-            case 4:
+            case 5:
                 echo "Ingrese la cantidad de pasajeros que desea cargar: ";
                 $numPasajero=trim(fgets(STDIN));
                 $espacio=$objViaje->HayEspacio($numPasajero);
                 if($espacio==true){
-                    echo "Ingrese el Nombre del nuevo Pasajero ";
-                    $nuevoNombre=trim(fgets(STDIN));
-                    echo "Ingrese el Apellido del nuevo Pasajero: ";
-                    $nuevoApellido=trim(fgets(STDIN));
-                    echo "Ingrese el Numero de Documento del nuevo Pasajero: ";
-                    $nuevoDNI=trim(fgets(STDIN));
-                    $objViaje->CargarNuevaPasajero($nuevoNombre,$nuevoApellido,$nuevoDNI,$numPasajero);
+                $count=0;
+                    do{
+                        echo "Ingrese el Nombre del nuevo Pasajero ";
+                        $nuevoNombre=trim(fgets(STDIN));
+                        echo "Ingrese el Apellido del nuevo Pasajero: ";
+                        $nuevoApellido=trim(fgets(STDIN));
+                        echo "Ingrese el Numero de Documento del nuevo Pasajero: ";
+                        $nuevoDNI=trim(fgets(STDIN));
+                        echo "Ingrese el Telefono del nuevo Pasajero: ";
+                        $nuevoTelefono=trim(fgets(STDIN));
+                        $objViaje->CargarNuevaPasajero($nuevoNombre,$nuevoApellido,$nuevoDNI,$nuevoTelefono);
+                        $count++;
+                    }while($count<$numPasajero);
                 }else
                 echo "No hay sufiente espacio!";
                 
@@ -79,18 +102,19 @@ do {
                 break;
             }
     }
-    while ($opcion != 5);
+    while ($opcion != 6);
 
 function seleccionarOpcion(){
     echo "\n MENU DE OPCIONES: \n
             1)- Mostrar Datos: \n
             2)- Modificar datos del Viaje: \n
-            3)- Modificar Datos de un pasajero: \n
-            4)- Cargar un nuevo pasajero: \n
-            5)- SALIR. \n";
+            3)- Modificar datos del Responsable del Viaje: \n
+            4)- Modificar Datos de un pasajero: \n
+            5)- Cargar un nuevo pasajero: \n
+            6)- SALIR. \n";
     $opcion = trim(fgets(STDIN));
 
-    if ($opcion < 1 || $opcion > 5){
+    if ($opcion < 1 || $opcion > 6){
         echo "Ingrese una opción válida:";
     }
     return $opcion;

@@ -7,19 +7,31 @@ Utilice un array que almacene la información correspondiente a los pasajeros.
 Cada pasajero es un array asociativo con las claves “nombre”, “apellido” y “numero de documento”.
 Implementar un script testViaje.php que cree una instancia de la clase Viaje 
 y presente un menú que permita cargar la información del viaje, modificar y ver sus datos. */
+
+/*Modificar la clase Viaje para que ahora los pasajeros sean un objeto que tenga los atributos 
+nombre, apellido, numero de documento y teléfono. El viaje ahora contiene una referencia a una colección 
+de objetos de la clase Pasajero. También se desea guardar la información de la persona responsable de realizar 
+el viaje, para ello cree una clase ResponsableV que registre el número de empleado, número de licencia, 
+nombre y apellido. La clase Viaje debe hacer referencia al responsable de realizar el viaje.
+Volver a implementar las operaciones que permiten modificar el nombre, apellido y teléfono de un pasajero.
+Luego implementar la operación que agrega los pasajeros al viaje, solicitando por consola la información de los mismos.
+Se debe verificar que el pasajero no este cargado mas de una vez en el viaje. 
+De la misma forma cargue la información del responsable del viaje.*/
 class Viaje{
     //atributos
     private $codigoViaje;
     private $destinoViaje;
     private $cantMaxPasajero;
     private $coleccionPasajero=[];  //array
+    private $responsableV;
 
-    public function __construct($codigo, $destino, $cantMaxP,$coleccionPasajero)
+    public function __construct($codigo, $destino, $cantMaxP,$coleccionPasajero,$responsableV)
     {
         $this->codigoViaje=$codigo;
         $this->destinoViaje=$destino;
         $this->cantMaxPasajero=$cantMaxP;
         $this->coleccionPasajero=$coleccionPasajero;
+        $this->responsableV=$responsableV;
     }
 
     //GET
@@ -35,6 +47,9 @@ class Viaje{
     public function getColeccionPasajero(){
         return $this->coleccionPasajero;
     }
+    public function getResponsableV(){
+        return $this->responsableV;
+    }
      
     //SET
     public function setCodigo($codigoViaje){
@@ -49,23 +64,61 @@ class Viaje{
     public function setColeccionPasajero($coleccionPasajero){
         $this->coleccionPasajero=$coleccionPasajero;
     }
+    public function setResponsableV($responsableV){
+        $this->responsableV=$responsableV;
+    }
 
     public function __toString()
     {
         return ("Codigo: ".$this->getCodigo()."\n".
                 "Destino: ".$this->getDestino()."\n".
                 "Cantidad Maxima de Pasajero: ".$this->getCantMaxPasajero()."\n".
-                "Datos De los Pasajeros: ".$this->ForColeccionPasajero())."\n";       
+                "Responsable del Viaje: \n".$this->getResponsableV()."\n".
+                "Datos De los Pasajeros: \n".$this->MostrarColeccionPasajero())."\n";       
     }
 
-    public function ForColeccionPasajero(){
+    public function MostrarColeccionPasajero(){
         $coleccionPasajero=$this->getColeccionPasajero();
         $cadena ="";
-        for($i=0 ; $i<count($coleccionPasajero); $i++){
-            $cadena= $cadena." Pasajero N°:".$i."\n"."\n"."Nombre: ".$coleccionPasajero[$i]['Nombre']."\n"."Apellido: ".$coleccionPasajero[$i]['Apellido']."\n"."Numero Documento: ".$coleccionPasajero[$i]['DNI']."\n"."\n";           
+        foreach ($coleccionPasajero as $pasajero => $datos) {
+            //echo $pasajero."\n";
+            //echo $datos."\n";
+            $cadena= $cadena." Pasajero N°:".$pasajero."\n".$datos."\n";
         }
         return $cadena;
     }
+    
+    public function BuscarPasajero($numeroDNI){
+        $coleccionPasajero=$this->getColeccionPasajero();
+        $i=0;
+        $encontro=true;
+        while($i<count($coleccionPasajero) && $encontro){ 
+            $i++;     
+            $pasajero=$coleccionPasajero[$i];
+            $pasajeroDNI=$pasajero->getNumeroDocumento();
+            if($numeroDNI==$pasajeroDNI){
+                $encontro=false;
+            }
+        }   
+        return $encontro;
+    }
+
+    public function ModificarPasajero($numeroDNI,$nuevoNombre,$nuevoApellido,$nuevoTelefono){
+        $coleccionPasajero=$this->getColeccionPasajero();
+        $i=0;
+        while($i<count($coleccionPasajero)){   
+            $pasajero=$coleccionPasajero[$i];
+            $pasajeroDNI=$pasajero->getNumeroDocumento();   
+            if($numeroDNI==$pasajeroDNI){
+                $pasajero->setNombre($nuevoNombre);
+                $pasajero->setApellido($nuevoApellido);
+                $pasajero->setTelefono($nuevoTelefono);
+                $this->setColeccionPasajero($coleccionPasajero);
+            }
+            $i++;
+        }              
+    }
+
     public function HayEspacio($numPasajero){
         $espacio=false;
         $coleccionPasajero=$this->getColeccionPasajero();
@@ -77,46 +130,11 @@ class Viaje{
         }
         return $espacio;
     }
-
-    public function BuscarPasajero($numeroDNI){
-        $coleccionPasajero=$this->getColeccionPasajero();
-        $i=0;
-        $encontro=true;
-        while($i<count($coleccionPasajero) && $encontro){ 
-            $i++;     
-            if($numeroDNI==$coleccionPasajero[$i]['DNI']){
-                $encontro=false;
-            }
-        }   
-        return $encontro;
-    }
-
-    public function ModificarPasajero($numeroDNI,$nuevoNombre,$nuevoApellido,$nuevoDNI){
-        $coleccionPasajero=$this->getColeccionPasajero();
-        $i=0;
-        while($i<count($coleccionPasajero)){      
-            if($numeroDNI==$coleccionPasajero[$i]['DNI']){
-                $coleccionPasajero[$i]=['Nombre'=>$nuevoNombre,
-                                        'Apellido'=>$nuevoApellido,
-                                        'DNI'=>$nuevoDNI];
-                $this->setColeccionPasajero($coleccionPasajero);
-            }
-            $i++;
-        }              
-    }
-
-    public function CargarNuevaPasajero($nuevoNombre,$nuevoApellido,$nuevoDNI,$numPasajero)
+    public function CargarNuevaPasajero($nuevoNombre,$nuevoApellido,$nuevoDNI,$nuevoTelefono)
     {
         $coleccionPasajero=$this->getColeccionPasajero();
-        $count=1;
-        do {
-            $count++;
-            $pasajero= [
-                'Nombre'=>$nuevoNombre,
-                'Apellido'=>$nuevoApellido,
-                'DNI'=>$nuevoDNI];
-            array_push($coleccionPasajero,$pasajero);
-        } while ($count<=$numPasajero);
+        $pasajero= new Pasajero($nuevoNombre,$nuevoApellido,$nuevoDNI,$nuevoTelefono);
+        array_push($coleccionPasajero,$pasajero);
         $this->setColeccionPasajero($coleccionPasajero);
     }
 
