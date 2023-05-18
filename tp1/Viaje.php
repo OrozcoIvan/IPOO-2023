@@ -17,6 +17,12 @@ Volver a implementar las operaciones que permiten modificar el nombre, apellido 
 Luego implementar la operación que agrega los pasajeros al viaje, solicitando por consola la información de los mismos.
 Se debe verificar que el pasajero no este cargado mas de una vez en el viaje. 
 De la misma forma cargue la información del responsable del viaje.*/
+
+/*Modificar la clase viaje para almacenar el costo del viaje, 
+ la suma de los costos abonados por los pasajeros 
+ e implementar el método venderPasaje($objPasajero) que debe incorporar el pasajero a la colección de pasajeros
+( solo si hay espacio disponible), actualizar los costos abonados y retornar el costo final que deberá 
+ser abonado por el pasajero.*/
 class Viaje{
     //atributos
     private $codigoViaje;
@@ -24,16 +30,19 @@ class Viaje{
     private $cantMaxPasajero;
     private $coleccionPasajero=[];  //array
     private $responsableV;
+    private $costoViaje;
+    private $costosAbonados;
 
-    public function __construct($codigo, $destino, $cantMaxP,$coleccionPasajero,$responsableV)
+    public function __construct($codigo,$destino,$cantMaxP,$coleccionPasajero,$responsableV,$costoViaje,$costosAbonados)
     {
         $this->codigoViaje=$codigo;
         $this->destinoViaje=$destino;
         $this->cantMaxPasajero=$cantMaxP;
         $this->coleccionPasajero=$coleccionPasajero;
         $this->responsableV=$responsableV;
+        $this->costoViaje=$costoViaje;
+        $this->costosAbonados=$costosAbonados;
     }
-
     //GET
     public function getCodigo(){
         return $this->codigoViaje;
@@ -50,7 +59,12 @@ class Viaje{
     public function getResponsableV(){
         return $this->responsableV;
     }
-     
+    public function getCostoViaje(){
+        return $this->costoViaje;
+    }
+    public function getCostosAbonados(){
+        return $this->costosAbonados;
+    }
     //SET
     public function setCodigo($codigoViaje){
         $this->codigoViaje=$codigoViaje;
@@ -67,6 +81,12 @@ class Viaje{
     public function setResponsableV($responsableV){
         $this->responsableV=$responsableV;
     }
+    public function setCostoViaje($costoViaje){
+        $this->costoViaje=$costoViaje;
+    }
+    public function setCostosAbonados($costosAbonados){
+        $this->costosAbonados=$costosAbonados;
+    }
 
     public function __toString()
     {
@@ -74,7 +94,9 @@ class Viaje{
                 "Destino: ".$this->getDestino()."\n".
                 "Cantidad Maxima de Pasajero: ".$this->getCantMaxPasajero()."\n".
                 "Responsable del Viaje: \n".$this->getResponsableV()."\n".
-                "Datos De los Pasajeros: \n".$this->MostrarColeccionPasajero())."\n";       
+                "Datos De los Pasajeros: \n".$this->MostrarColeccionPasajero()."\n".
+                "Costos del Viaje: \n".$this->getCostoViaje()."\n".
+                "Costos Abonados: \n".$this->getCostosAbonados()."\n");       
     }
 
     public function MostrarColeccionPasajero(){
@@ -146,15 +168,53 @@ class Viaje{
         return $estaCargado;
     }
 
-    public function CargarNuevaPasajero($nuevoNombre,$nuevoApellido,$nuevoDNI,$nuevoTelefono)
+    /*public function CargarNuevaPasajero($nuevoNombre,$nuevoApellido,$nuevoDNI,$nuevoTelefono)
     {
         $coleccionPasajero=$this->getColeccionPasajero();
         $pasajero= new Pasajero($nuevoNombre,$nuevoApellido,$nuevoDNI,$nuevoTelefono);
         array_push($coleccionPasajero,$pasajero);
         $this->setColeccionPasajero($coleccionPasajero);
-    }
+    }*/
 
+    /*venderPasaje($objPasajero) que debe incorporar el pasajero a la colección de pasajeros
+    ( solo si hay espacio disponible), actualizar los costos abonados y retornar el costo final que deberá 
+    ser abonado por el pasajero.*/
+
+    public function venderPasaje($objPasajero){
+        $hayEspacio=$this->hayPasajesDisponible();
+        if($hayEspacio==true){
+            $coleccionPasajero=$this->getColeccionPasajero();
+            array_push($coleccionPasajero,$objPasajero);
+            $this->setColeccionPasajero($coleccionPasajero);
+            $costoPasaje=$this->CostoViajeXpasajero();
+            $porcIncremento=$objPasajero->darPorcentajeIncremento();
+            $costeFinal=$costoPasaje+(($porcIncremento*$costoPasaje)/100);
+            $costosAbonados=$this->getCostosAbonados();
+            $costosAbonadosTotal=$costosAbonados+$costeFinal;
+            $this->setCostosAbonados($costosAbonadosTotal);
+            return $costeFinal;
+        }
+    }
+    public function CostoViajeXpasajero(){
+        $cantPasajeros=$this->getCantMaxPasajero();
+        $costoViaje=$this->getCostoViaje();
+        $costoPasaje=$costoViaje/$cantPasajeros;
+        return $costoPasaje;
+    }
    
+    /*Implemente la función hayPasajesDisponible() que retorna verdadero si la cantidad de 
+    pasajeros del viaje es menor a la cantidad máxima de pasajeros y falso caso contrario*/
+    public function hayPasajesDisponible(){
+        $hayPasajes=false;
+        $coleccionPasajero=$this->getColeccionPasajero();
+        $cantTotalPasajeros=count($coleccionPasajero);
+        $cantMaxPasajero=$this->getCantMaxPasajero();
+        if($cantTotalPasajeros<$cantMaxPasajero){
+            $hayPasajes=true;
+        }
+        return $hayPasajes;
+
+    }
 }
 
 ?>
